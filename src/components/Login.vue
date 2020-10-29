@@ -5,21 +5,23 @@
       <div class="input-div">
         <div class="username-div">
           <label for="username">Username:</label>
-          <input type="text" v-model="username" />
+          <input type="text" v-model="loginForm.username" />
         </div>
         <div class="password-div">
           <label for="password">Password:</label>
-          <input type="text" v-model="password" />
+          <input type="text" v-model="loginForm.password" />
         </div>
       </div>
       <div class="login-button-div">
-        <button v-on:click="validForm">login</button>
+        <button v-on:click="validateFormAndUser">login</button>
       </div>
     </div>
-    <template v-if="errors">
+    <template v-if="this.$store.state.errors.length">
       <div class="errors-div">
         <ul>
-          <li v-for="error in errors" v-bind:key="error">- {{ error }}</li>
+          <li v-for="error in this.$store.state.errors" v-bind:key="error">
+            - {{ error }}
+          </li>
         </ul>
       </div>
     </template>
@@ -27,42 +29,36 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import agentDashboard from '../pages/agent_dashboard';
+import travelerDashboard from '../pages/traveler_dashboard';
 
 export default {
+  mounted() {
+    this.$store.dispatch('getAllTravelers');
+  },
   data() {
     return {
-      username: '',
-      password: '',
+      loginForm: { username: '', password: '' },
       errors: [],
     };
   },
-  components: { agentDashboard },
+  components: { agentDashboard, travelerDashboard },
   methods: {
-    isValidPassword() {
-      if (this.password === this.$store.state.correctPw) {
-        this.$store.dispatch('validatePassword', this.password);
-        this.determineUser();
-        return true;
-      }
-      return false;
-    },
-    determineUser() {
-      if (this.username === this.$store.state.agentLogin) {
-        this.$store.dispatch('agentLogin', this.username);
+    validateFormAndUser() {
+      this.$store.dispatch('checkForErrors', this.loginForm);
+      this.$store.dispatch('validatePassword', this.loginForm);
+      this.$store.dispatch('validateUsername', this.loginForm);
+      this.$store.dispatch('determineUser', this.loginForm);
+      if (this.whichUser === 'agency') {
+        this.$store.dispatch('agentLogin');
+      } else {
+        this.$store.dispatch('travelerLogin', this.loginForm);
       }
     },
-    validForm() {
-      this.errors = [];
-      if (!this.username === 'agency' || this.username === '') {
-        this.errors.push('Username is required');
-      }
-      if (!this.password === 'travel2020' || this.password === '') {
-        this.errors.push('Password is required');
-      }
-      this.isValidPassword();
-      return true;
-    },
+  },
+  computed: {
+    ...mapGetters(['whichUser']),
   },
 };
 </script>
