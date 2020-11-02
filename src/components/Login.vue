@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper-div">
     <h1>Travel Tracker</h1>
-    <div class="input-button-div">
+    <div v-if="this.$store.state.anyoneLoggedIn === false">
       <div class="input-div">
         <div class="username-div">
           <label for="username">Username:</label>
@@ -35,6 +35,8 @@ import travelerDashboard from '../pages/traveler_dashboard';
 
 export default {
   mounted() {
+    this.$store.dispatch('getAllDestinations');
+    this.$store.dispatch('getAllTrips');
     this.$store.dispatch('getAllTravelers');
   },
   data() {
@@ -55,6 +57,12 @@ export default {
       } else {
         this.$store.dispatch('travelerLogin', this.loginForm);
       }
+    },
+    pushHome() {
+      this.loginForm.username = '';
+      this.loginForm.password = '';
+      this.$router.push('/');
+      this.$store.dispatch('logOut');
     },
   },
   computed: {
