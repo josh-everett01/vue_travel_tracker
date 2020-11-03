@@ -91,19 +91,17 @@ input {
   grid-column: 2;
 }
 .login-button-div {
-  grid-column: 2;
   align-self: center;
+  grid-column: 2;
 }
-
 .login-wrapper-div {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
-
-.username-div,
-.password-div {
+.password-div,
+.username-div {
+  align-self: center;
   display: flex;
   flex-direction: column;
-  align-self: center;
 }
 </style>
