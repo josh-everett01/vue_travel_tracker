@@ -2,44 +2,62 @@ import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import isBefore from 'date-fns/isBefore';
+import formatDistance from 'date-fns/formatDistance';
 import router from '../router/index';
 
 Vue.use(Vuex);
 
-
 export default new Vuex.Store({
-
   state: {
-    anyoneLoggedIn: false,
-    allDestinations: [],
-    correctPw: 'travel2020',
     agentLogin: 'agency',
-    formData: {},
+    agentLoggedIn: false,
+    allDestinations: [],
+    allTrips: [],
+    anyoneLoggedIn: false,
+    correctPw: 'travel2020',
+    destinations: [],
+    eachTripsCost: [],
     errors: [],
+    formData: {},
     formIsValid: false,
     passwordIsValid: false,
-    usernameIsValid: false,
-    user: '',
-    trips: [],
-    destinations: [],
-    agentLoggedIn: false,
-    travelerLoggedIn: false,
-    travelerId: Number,
-    travelers: [],
-    travelersTrips: [],
-    travelersPreviousTrips: [],
-    travelersUpcomingTrips: [],
-    travelersDestinations: [],
-    allTrips: [],
-    traveler: {},
     picUrl: '',
-    eachTripsCost: [],
+    traveler: {},
+    travelerId: Number,
+    travelerLoggedIn: false,
+    travelers: [],
+    travelersDestinations: [],
+    travelersPreviousTrips: [],
+    travelersTrips: [],
+    travelersUpcomingTrips: [],
+    tripRequestFormValid: false,
+    tripRequestInfo: {
+      agentFee: '',
+      destination: '',
+      destinationsFlightCost: '',
+      destinationId: Number,
+      destinationImageUrl: '',
+      destinationsLodgingCost: '',
+      endDate: '',
+      flightCost: '',
+      lodgingCost: '',
+      numberOfTravelers: '',
+      startDate: '',
+      totalTripCost: '',
+      tripLength: '',
+    },
+    tripRequestInfoCreated: false,
+    tripRequestSubmitted: false,
+    trips: [],
+    user: '',
+    usernameIsValid: false,
   },
 
   getters: {
-
     whichUser: state => state.user,
-
+    isTripRequestFormValid: state => state.tripRequestFormValid,
+    tripRequestInfoCreated: state => state.tripRequestInfoCreated,
+    hasTripRequestBeenSubmitted: state => state.tripRequestSubmitted,
   },
 
   mutations: {
@@ -63,20 +81,24 @@ export default new Vuex.Store({
       }
     },
     validateUsername(state, form) {
-      if (form.username === state.agentLogin || form.username.includes('traveler')) {
+      if (
+        form.username === state.agentLogin ||
+        form.username.includes('traveler')
+      ) {
         state.usernameIsValid = true;
       } else {
         state.errors.push('Please enter a valid Username');
       }
     },
     determineUser(state, form) {
-      if (state.formIsValid &&
-        state.passwordIsValid &&
-        state.usernameIsValid) {
+      if (state.formIsValid && state.passwordIsValid && state.usernameIsValid) {
         if (form.username === state.agentLogin) {
           state.user = form.username;
         }
-        if (form.username.toLowerCase().includes('traveler') && form.username.slice(8) < state.travelers.length) {
+        if (
+          form.username.toLowerCase().includes('traveler') &&
+          form.username.slice(8) < state.travelers.length
+        ) {
           state.user = form.username;
         }
       }
@@ -94,8 +116,7 @@ export default new Vuex.Store({
       router.push('/Traveler-Dashboard');
     },
     getAllTravelers(state, response) {
-      state.travelers =
-        response.travelers;
+      state.travelers = response.travelers;
     },
     getAllTrips(state, response) {
       state.allTrips = response.trips;
@@ -156,17 +177,112 @@ export default new Vuex.Store({
       state.travelersTrips.forEach((trip) => {
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < state.allDestinations.length; i++) {
-          if (trip.destinationID === state.allDestinations[i].id && trip.status === 'approved') {
-            const tripFlightCosts = state.allDestinations[i]
-              .estimatedFlightCostPerPerson * trip.travelers;
-            const tripLodgingCosts = state.allDestinations[i]
-              .estimatedLodgingCostPerDay * trip.duration;
+          if (
+            trip.destinationID === state.allDestinations[i].id &&
+            trip.status === 'approved'
+          ) {
+            const tripFlightCosts =
+              state.allDestinations[i].estimatedFlightCostPerPerson *
+              trip.travelers;
+            const tripLodgingCosts =
+              state.allDestinations[i].estimatedLodgingCostPerDay *
+              trip.duration;
             const agentFee = (tripLodgingCosts + tripFlightCosts) * 0.1;
-            const totalTripCost = (tripFlightCosts + tripLodgingCosts) + agentFee;
+            const totalTripCost = tripFlightCosts + tripLodgingCosts + agentFee;
             state.eachTripsCost.push(totalTripCost);
           }
         }
       });
+    },
+    validateTripRequestForm(state, tripRequestForm) {
+      state.errors = [];
+      if (state.tripRequestFormValid === false) {
+        if (!tripRequestForm.destination) {
+          state.errors.push('Please select a destination');
+        }
+        if (!tripRequestForm.numberOfTravs) {
+          state.errors.push('Please enter the number of travelers');
+        }
+        if (!tripRequestForm.startDate || !tripRequestForm.endDate) {
+          state.errors.push('Start AND End date required');
+        }
+        if (
+          tripRequestForm.destination &&
+          tripRequestForm.numberOfTravs &&
+          tripRequestForm.startDate &&
+          tripRequestForm.endDate
+        ) {
+          state.tripRequestFormValid = true;
+        }
+      }
+    },
+    calculateTripRequest(state, tripRequestForm) {
+      state.allDestinations.forEach((destination) => {
+        if (tripRequestForm.destination === destination.destination) {
+          state.tripRequestInfo.destination = tripRequestForm.destination;
+          state.tripRequestInfo.numberOfTravelers =
+            tripRequestForm.numberOfTravs;
+          state.tripRequestInfo.startDate = tripRequestForm.startDate;
+          state.tripRequestInfo.endDate = tripRequestForm.endDate;
+          state.tripRequestInfo.flightCost =
+            destination.estimatedFlightCostPerPerson *
+            tripRequestForm.numberOfTravs;
+          state.tripRequestInfo.tripLength = formatDistance(
+            new Date(tripRequestForm.endDate),
+            new Date(tripRequestForm.startDate),
+          );
+          state.tripRequestInfo.lodgingCost =
+            destination.estimatedLodgingCostPerDay *
+            Number(state.tripRequestInfo.tripLength.slice(0, 1));
+          const costBeforeAgentFee =
+            state.tripRequestInfo.lodgingCost +
+            state.tripRequestInfo.flightCost;
+          state.tripRequestInfo.agentFee = costBeforeAgentFee * 0.1;
+          state.tripRequestInfo.totalTripCost =
+            costBeforeAgentFee + state.tripRequestInfo.agentFee;
+          state.tripRequestInfo.destinationImageUrl = destination.image;
+          state.tripRequestInfoCreated = true;
+          state.tripRequestInfo.destinationsLodgingCost =
+            destination.estimatedLodgingCostPerDay;
+          state.tripRequestInfo.destinationsFlightCost =
+            destination.estimatedFlightCostPerPerson;
+          state.destinationID = destination.id;
+        }
+      });
+    },
+    submitTrip(state) {
+      const data = JSON.stringify({
+        id: parseFloat(state.allTrips.length + 1),
+        userID: state.traveler.id,
+        destinationID: state.destinationID,
+        travelers: parseFloat(state.tripRequestInfo.numberOfTravelers),
+        date: state.tripRequestInfo.startDate.replace(/-/g, '/'),
+        duration: Number(state.tripRequestInfo.tripLength.slice(0, 1)),
+        status: 'pending',
+        suggestedActivities: [''],
+      });
+      const dataToJson = JSON.parse(data);
+      axios
+        .post(
+          'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
+          dataToJson,
+        )
+        // eslint-disable-next-line no-console
+        .then((response) => {
+          // eslint-disable-next-line no-console
+          console.log(response);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        });
+      state.tripRequestSubmitted = true;
+    },
+    refreshTravelerDashboard(state) {
+      state.tripRequestFormValid = false;
+    },
+    getRefreshedTrips(state, response) {
+      state.allTrips = response.trips;
     },
   },
 
@@ -191,13 +307,19 @@ export default new Vuex.Store({
       context.commit('travelerLogin', form);
     },
     getAllTravelers({ commit }) {
-      axios.get('https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/travelers/travelers')
+      axios
+        .get(
+          'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/travelers/travelers',
+        )
         .then((response) => {
           commit('getAllTravelers', response.data);
         });
     },
     getAllTrips({ commit }) {
-      axios.get('https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips')
+      axios
+        .get(
+          'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
+        )
         .then((response) => {
           commit('getAllTrips', response.data);
         });
@@ -212,7 +334,10 @@ export default new Vuex.Store({
       context.commit('separateTravelersTrips');
     },
     getAllDestinations({ commit }) {
-      axios.get('https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/destinations/destinations')
+      axios
+        .get(
+          'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/destinations/destinations',
+        )
         .then((response) => {
           commit('getAllDestinations', response.data);
         });
@@ -228,6 +353,27 @@ export default new Vuex.Store({
     },
     calcAmntTravSpent(context) {
       context.commit('calcAmntTravSpent');
+    },
+    validateTripRequestForm(context, tripRequestForm) {
+      context.commit('validateTripRequestForm', tripRequestForm);
+    },
+    calculateTripRequest(context, tripRequestForm) {
+      context.commit('calculateTripRequest', tripRequestForm);
+    },
+    submitTripRequest(context) {
+      context.commit('submitTrip');
+    },
+    refreshTravelerDashboard(context) {
+      context.commit('refreshTravelerDashboard');
+    },
+    getRefreshedTrips({ commit }) {
+      axios
+        .get(
+          'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
+        )
+        .then((response) => {
+          commit('getRefreshedTrips', response.data);
+        });
     },
   },
 });
