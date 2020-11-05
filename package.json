@@ -4,6 +4,7 @@
   "description": "Travel Tracker is a web application which manages and tracks different trips for users and travel agents, by consuming and posting to an external API.",
   "author": "Joshua Everett <59103702+josh-everett01@users.noreply.github.com>",
   "private": true,
+  "homepage": "https://josh-everett01.github.io/vue_travel_tracker/",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
