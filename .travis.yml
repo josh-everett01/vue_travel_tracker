@@ -7,6 +7,7 @@ cache: npm
 script: eslint --ext .js,.vue src
 deploy:
   provider: pages
+  local_dir: build
   skip_cleanup: true
   github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep_history: true
