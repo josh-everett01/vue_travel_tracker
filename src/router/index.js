@@ -5,6 +5,7 @@ import App from '../App';
 
 import AgentDashboard from '../pages/agent_dashboard';
 import TravelerDashboard from '../pages/traveler_dashboard';
+import TravelerSearch from '../pages/traveler_search';
 
 Vue.use(Router);
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/traveler-dashboard/',
       name: 'TravelerDashboard',
       component: TravelerDashboard,
+    },
+    {
+      path: '/traveler-search/',
+      name: 'TravelerSearch',
+      component: TravelerSearch,
     },
 
   ],
