@@ -16,6 +16,9 @@
         <button v-on:click="validateFormAndUser">login</button>
       </div>
     </div>
+    <div v-else>
+      <b-button @click="pushHome()">LOGOUT</b-button>
+    </div>
     <template v-if="this.$store.state.errors.length">
       <div class="errors-div">
         <ul>

@@ -3,17 +3,22 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import isBefore from 'date-fns/isBefore';
 import formatDistance from 'date-fns/formatDistance';
+import isSameDay from 'date-fns/isSameDay';
 import router from '../router/index';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    allLodging: [],
+    allFlight: 0,
+    agentEarnings: [],
     agentLogin: 'agency',
     agentLoggedIn: false,
     allDestinations: [],
     allTrips: [],
     anyoneLoggedIn: false,
+    approvedTrips: [],
     correctPw: 'travel2020',
     destinations: [],
     eachTripsCost: [],
@@ -21,13 +26,17 @@ export default new Vuex.Store({
     formData: {},
     formIsValid: false,
     passwordIsValid: false,
+    pendingTrips: [],
     picUrl: '',
+    todaysTrips: [],
+    totalMoneyForTrips: Number,
     traveler: {},
     travelerId: Number,
     travelerLoggedIn: false,
     travelers: [],
     travelersDestinations: [],
     travelersPreviousTrips: [],
+    travelerSearchActive: false,
     travelersTrips: [],
     travelersUpcomingTrips: [],
     tripRequestFormValid: false,
@@ -124,6 +133,7 @@ export default new Vuex.Store({
     getTravelersTrips(state) {
       state.allTrips.forEach((trip, index) => {
         const tripUserId = state.allTrips[index].userID;
+
         // eslint-disable-next-line radix
         if (parseInt(state.travelerId) === tripUserId) {
           state.travelersTrips.push(trip);
@@ -134,6 +144,7 @@ export default new Vuex.Store({
       state.travelerLoggedIn = false;
       state.agentLoggedIn = false;
       state.anyoneLoggedIn = false;
+      location.reload();
     },
     getAllDestinations(state, response) {
       state.allDestinations = response.destinations;
@@ -284,6 +295,49 @@ export default new Vuex.Store({
     getRefreshedTrips(state, response) {
       state.allTrips = response.trips;
     },
+    getPendingTrips(state, allTrips) {
+      allTrips.forEach(((trip) => {
+        if (trip.status === 'pending') {
+          state.pendingTrips.push(trip);
+        }
+      }));
+    },
+    setTravelerIdForAgent(state, traveler) {
+      state.travelers.forEach(((person) => {
+        if (person.name === traveler) {
+          state.travelerId = person.id;
+          state.travelerSearchActive = true;
+          state.traveler = traveler;
+        }
+      }));
+    },
+    getTodaysTrips(state) {
+      state.allTrips.forEach(((trip) => {
+        const tripDate = new Date(trip.date);
+        const today = new Date();
+
+        if (isSameDay(tripDate, today)) {
+          state.todaysTrips.push(trip);
+        }
+      }));
+    },
+    getAgentEarnings(state) {
+      state.totalMoneyForTrips = 0;
+      state.allTrips.forEach(((trip) => {
+        if (trip.status === 'approved') {
+          state.approvedTrips.push(trip);
+          // eslint-disable-next-line consistent-return
+          state.allDestinations.forEach(((destination) => {
+            if (destination.id === trip.destinationID) {
+              const tripFlightCost = destination.estimatedFlightCostPerPerson * trip.travelers;
+              const tripLodgingCost = destination.estimatedLodgingCostPerDay * trip.duration;
+              const totalTripCost = tripFlightCost + tripLodgingCost;
+              state.totalMoneyForTrips += totalTripCost;
+            }
+          }));
+        }
+      }));
+    },
   },
 
   actions: {
@@ -374,6 +428,18 @@ export default new Vuex.Store({
         .then((response) => {
           commit('getRefreshedTrips', response.data);
         });
+    },
+    getPendingTrips(context, allTrips) {
+      context.commit('getPendingTrips', allTrips);
+    },
+    setTravelerIdForAgent(context, traveler) {
+      context.commit('setTravelerIdForAgent', traveler);
+    },
+    getTodaysTrips(context) {
+      context.commit('getTodaysTrips');
+    },
+    getAgentEarnings(context) {
+      context.commit('getAgentEarnings');
     },
   },
 });
