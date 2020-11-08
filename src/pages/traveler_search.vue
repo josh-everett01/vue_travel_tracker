@@ -18,7 +18,8 @@
     </template>
     <template v-if="state.travelerSearchActive">
       <h1>{{ state.traveler }}'s travels</h1>
-      <h4>Pending Trips:</h4>
+      <h2>Total Spent on Trips: {{ addTotalTripCosts | currency }}</h2>
+      <h2>Pending Trips (if any):</h2>
       <div class="trips" v-for="trip in state.travelersTrips" :key="trip.id">
         <div class="pending-trips" v-if="trip.status === 'pending'">
           <div class="destinationimage">
@@ -36,9 +37,17 @@
           <div class="trip-destination">
             {{ state.allDestinations[trip.destinationID].destination }}
           </div>
+          <b-button @click="approveTrip(trip.id)">Approve</b-button>
+          <b-button @click="deleteTrip(trip.id)">Delete</b-button>
         </div>
-
-        <div class="trips" v-if="trip.status === 'approved'">
+      </div>
+      <h2>Approved Trips:</h2>
+      <div
+        class="trips"
+        v-for="trip in state.travelersTrips"
+        :key="trip.id + 10"
+      >
+        <div class="pending-trips" v-if="trip.status === 'approved'">
           <div class="destinationimage">
             <b-img
               fluid
@@ -78,6 +87,18 @@ export default {
       this.$store.dispatch('getTravsTripsAndDestinations');
       this.$store.dispatch('getUpcomingAndPastTrips');
       this.$store.dispatch('calcAmntTravSpent');
+    },
+    approveTrip(tripId) {
+      this.$store.dispatch('approveTrip', tripId);
+    },
+    deleteTrip(tripId) {
+      this.$store.dispatch('deleteTrip', tripId);
+    },
+  },
+  computed: {
+    addTotalTripCosts() {
+      const total = this.$store.state.eachTripsCost.reduce((a, b) => a + b, 0);
+      return total;
     },
   },
 };
