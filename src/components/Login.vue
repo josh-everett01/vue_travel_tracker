@@ -11,9 +11,9 @@
           <label for="password">Password:</label>
           <input type="text" v-model="loginForm.password" />
         </div>
-      </div>
-      <div class="login-button-div">
-        <button v-on:click="validateFormAndUser">login</button>
+        <div class="login-button-div">
+          <button v-on:click="validateFormAndUser">login</button>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -38,7 +38,6 @@ import travelerDashboard from '../pages/traveler_dashboard';
 
 export default {
   mounted() {
-    this.$store.dispatch('getAllDestinations');
     this.$store.dispatch('getAllTrips');
     this.$store.dispatch('getAllTravelers');
   },
@@ -90,21 +89,26 @@ input {
 }
 .input-div {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   grid-column: 2;
+  padding: 1%;
 }
 .login-button-div {
-  align-self: center;
-  grid-column: 2;
+  align-self: flex-end;
+  margin-left: 1%;
 }
 .login-wrapper-div {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: 1px solid #000;
 }
 .password-div,
 .username-div {
   align-self: center;
   display: flex;
   flex-direction: column;
+}
+.password-div {
+  margin-left: 1%;
 }
 </style>
