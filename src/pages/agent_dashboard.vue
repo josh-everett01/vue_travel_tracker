@@ -47,38 +47,33 @@
         </b-col>
       </b-row>
     </b-container>
-    <b-container>
-      <h1>Pending Trips:</h1>
-      <b-row class="pending-trips">
-        <b-col v-for="trip in state.pendingTrips" :key="trip.id">
-          <div class="trip-img">
-            <b-img
-              thumbnail
-              v-bind:src="state.allDestinations[trip.destinationID].image"
-            />
-          </div>
-          <span><strong> Traveler: </strong></span>
-          <div class="trav-name">
-            {{ state.travelers[trip.userID].name }}
-          </div>
-          <div class="trip-destination">
-            <strong> Destination: </strong>
-            {{ state.allDestinations[trip.destinationID].destination }}
-          </div>
-          <div class="trip-date">
-            <strong> Trip Date: </strong> {{ trip.date }}
-          </div>
-          <div class="trip-duration">
-            <strong> Trip Duration: </strong> {{ trip.duration }} days
-          </div>
-          <div class="trip-status">
-            <strong> Trip Status: </strong><br />
-            {{ trip.status }}
-          </div>
-          <b-button>Approve</b-button>
-        </b-col>
-      </b-row>
-    </b-container>
+    <h1>Pending Trips:</h1>
+    <div>
+      <b-card-group deck>
+        <b-card
+          overlay
+          v-for="(trip, index) in state.pendingTrips"
+          :key="trip.id"
+          :title="'Pending Trip ' + (index + 1)"
+          :img-src="state.allDestinations[trip.destinationID - 1].image"
+          class="trip"
+        >
+          <b-card-text>
+            <strong> Traveler: </strong> <br />
+            {{ state.travelers[trip.userID - 1].name }}
+            <strong> Destination: </strong> <br />
+            {{ state.allDestinations[trip.destinationID - 1].destination }}
+            <br />
+            <strong> Trip Date: </strong> <br />
+            {{ trip.date }}
+          </b-card-text>
+          <template #footer>
+            <b-button @click="approveTrip(trip.id)">Approve</b-button>
+            <b-button @click="deleteTrip(trip.id)">Delete</b-button>
+          </template>
+        </b-card>
+      </b-card-group>
+    </div>
   </div>
 </template>
 
@@ -96,7 +91,14 @@ export default {
     pushToTravelerPage() {
       this.$router.push('/traveler-search');
     },
+    approveTrip(tripId) {
+      this.$store.dispatch('approveTrip', tripId);
+    },
+    deleteTrip(tripId) {
+      this.$store.dispatch('deleteTrip', tripId);
+    },
   },
+  computed: {},
   data() {
     return {
       trip: '',
@@ -108,20 +110,29 @@ export default {
 </script>
 
 <style scoped>
+button {
+  margin: 5%;
+}
+img {
+  size: 300px;
+}
 .agent-header {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
 }
-.trav-name,
-.trip-destination {
-  white-space: nowrap;
+.card-deck .card {
+  max-width: calc(25% - 30px);
+  min-width: 20%;
 }
-img {
-  width: 15em;
-  height: 13em;
+.card-text {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
 }
-button {
-  margin: 5%;
+.card-title {
+  color: #fff;
+}
+.list-group-item {
+  color: #000;
 }
 </style>

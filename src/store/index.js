@@ -39,6 +39,7 @@ export default new Vuex.Store({
     travelerSearchActive: false,
     travelersTrips: [],
     travelersUpcomingTrips: [],
+    tripRequestApproved: false,
     tripRequestFormValid: false,
     tripRequestInfo: {
       agentFee: '',
@@ -338,6 +339,38 @@ export default new Vuex.Store({
         }
       }));
     },
+    approveTrip(state, tripId) {
+      const data = JSON.stringify({ id: tripId, status: 'approved' });
+      const dataToJson = JSON.parse(data);
+      axios
+        .post(
+          'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/updateTrip',
+          dataToJson,
+        )
+        // eslint-disable-next-line no-console
+        .then((response) => {
+          // eslint-disable-next-line no-console
+          console.log(response);
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        });
+      state.tripRequestApproved = true;
+    },
+    deleteTrip(state, tripId) {
+      const data = { id: tripId };
+      fetch(
+        'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
+        {
+          method: 'DELETE', // or 'PUT'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        },
+      );
+    },
   },
 
   actions: {
@@ -440,6 +473,12 @@ export default new Vuex.Store({
     },
     getAgentEarnings(context) {
       context.commit('getAgentEarnings');
+    },
+    approveTrip(context, tripId) {
+      context.commit('approveTrip', tripId);
+    },
+    deleteTrip(context, tripId) {
+      context.commit('deleteTrip', tripId);
     },
   },
 });
