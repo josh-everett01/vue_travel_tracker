@@ -42,8 +42,7 @@ export default {
 
 <style scoped>
 h1 {
-  opacity: 1;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   border: 1px solid #fff;
   border-radius: 25px;
 }
@@ -69,7 +68,6 @@ img {
   padding: 8%;
   background-size: cover;
   background-position: bottom;
-  opacity: 88%;
 }
 /* * {
   border: 1px solid red;
