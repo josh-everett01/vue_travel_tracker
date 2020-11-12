@@ -1,7 +1,7 @@
 <template>
   <div v-if="!this.$store.state.anyoneLoggedIn" class="main-container">
     <div :style="{ backgroundImage: `url('${getimage}')` }" class="heading">
-      <h1>Bon Voyage!</h1>
+      <h1>Your Voyage Awaits!</h1>
     </div>
     <div class="grid">
       <div
