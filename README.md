@@ -2,7 +2,7 @@
 
 > Travel Tracker is a web application built with Vue.js which manages and tracks different trips for users and travel agents, by consuming and posting to an external API.
 
-[Travel Tracker Live Link](https://josh-everett01.github.io/travel_tracker/)
+[Vue Travel Tracker Live Link](https://josh-everett01.github.io/vue_travel_tracker/)
 This project was created by [Joshua Everett](https://github.com/josh-everett01)
 
 ## Table of contents
@@ -39,7 +39,7 @@ Password: travel2020
 - See any pending trips
 - Be able to approve any pending trips
 - See any trips happening on today's date
-- Be able to search for a traveler and then approve or delete any trips for that traveler
+- Be able to click on "Agent Tools" to search for a traveler and then approve or delete any trips for that traveler
 
 ##### To approve a pending trip:
 
@@ -50,12 +50,13 @@ Password: travel2020
 
 ##### To search for a traveler and approve / delete pending trip:
 
-1. Search for the traveler by name in the search field
-2. Click SHOW TRAVELER
-3. Any PENDING trips will be shown first in the list of this travelers trips
-4. To APPROVE the trip, click APPROVE
-5. To DELETE the trip, click DELETE
-6. Depending on the choice above the trip will now be showing as either APPROVED in the travelers list of UPCOMING TRIPS or will no longer be showing at all if it was DELETED
+1. Click "Agent Tools / Traveler Search"
+2. Search for the traveler by name in the search field
+3. Click SHOW TRAVELER
+4. Any PENDING trips will be shown first in the list of this travelers trips
+5. To APPROVE the trip, click APPROVE
+6. To DELETE the trip, click DELETE
+7. Depending on the choice above the trip will now be showing as either APPROVED in the travelers list of UPCOMING TRIPS or will no longer be showing at all if it was DELETED
 
 #### To login as any one of 50 travelers use the following login information:
 
@@ -79,7 +80,7 @@ Password: travel2020
 3. The requested trip will be shown in your PENDING TRIPS section the next time you login.
 4. Refresh the page and log back in OR click LOGOUT and then log back as the same traveler to see the new trip in the PENDING TRIPS section
 
-![Initial Styling of project](https://i.imgur.com/RSSlSew.png)
+![Initial Styling of project](https://i.imgur.com/bUlVubK.jpg)
 
 ## Setup
 
@@ -96,12 +97,12 @@ Password: travel2020
 
 ## Tech Stack
 
-- JavaScript
+- Vue.js / JavaScript
 - Sass / CSS3
 - HTML5
-- Webpack - Version 4.31
 - GitHub Pages
-- Hound Code Reviewer for Pull Requests
+- Hound Code Reviewer for Pull Requests 
+- Vue.js Webpack Template (For a detailed explanation on how the template works, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).)
 
 ## Learning Objectives
 
@@ -135,14 +136,13 @@ Password: travel2020
 
 #### I would not have been able to finish this project without the assistance of:
 
-[Rob Stringer](https://github.com/Mycobee) reviewing pull requests, and providing support and guidance on all aspects of this project.
-[Colin McDonnell](https://github.com/colinmcdonnell) providing support and guidance with multiple JavaScript and CSS issues during this project.
-The group @ [JavaScript Tutoring](https://javascripttutoring.slack.com) providing support and offered assistance during this project.
-[Mozilla JavaScript Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[W3 Schools JavaScript Documentation](https://www.w3schools.com/js/default.asp)
-The Contributors to the [Turing Schools Open Source Curriculum](https://frontend.turing.io/projects/travel-tracker.html)
-The contributors to the [Vue.js webpack template](http://vuejs-templates.github.io/webpack/)
-- For a detailed explanation on how the template works, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+- [Rob Stringer](https://github.com/Mycobee) reviewing pull requests, and providing support and guidance on all aspects of this project.
+- [Colin McDonnell](https://github.com/colinmcdonnell) providing support and guidance with multiple Vue / JavaScript and CSS issues during this project.
+- The group @ [JavaScript Tutoring](https://javascripttutoring.slack.com) providing support and offered assistance during this project.
+- [Mozilla JavaScript Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [W3 Schools JavaScript Documentation](https://www.w3schools.com/js/default.asp)
+- The Contributors to the [Turing Schools Open Source Curriculum](https://frontend.turing.io/projects/travel-tracker.html)
+- The contributors to the [Vue.js webpack template](http://vuejs-templates.github.io/webpack/)
 
 ## Contact
 
