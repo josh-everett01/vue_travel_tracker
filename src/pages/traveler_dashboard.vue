@@ -14,16 +14,24 @@
         :key="i"
       >
         <div class="destinationimage">
-          <img v-bind:src="state.allDestinations[trip.destinationID].image" />
-        </div>
-        <div class="trip-status">
-          {{ trip.status }}
+          <img
+            v-bind:src="state.allDestinations[trip.destinationID - 1].image"
+          />
         </div>
         <div class="trip-date">
+          <strong>Trip Date:</strong>
           {{ trip.date }}
         </div>
         <div class="trip-destination">
-          {{ state.allDestinations[trip.destinationID].destination }}
+          <strong>Trip Destination:</strong>
+          {{ state.allDestinations[trip.destinationID - 1].destination }}
+        </div>
+        <div class="trip-duration">
+          <strong>Trip Duration: </strong>{{ trip.duration }} days
+        </div>
+        <div class="trip-status">
+          <strong>Trip Status:</strong>
+          {{ trip.status }}
         </div>
       </div>
     </div>
@@ -34,13 +42,22 @@
       :key="index"
     >
       <div class="destinationimage">
-        <img v-bind:src="state.allDestinations[trip.destinationID].image" />
+        <img v-bind:src="state.allDestinations[trip.destinationID - 1].image" />
       </div>
       <div class="trip-date">
+        <strong>Trip Date:</strong>
         {{ trip.date }}
       </div>
       <div class="trip-destination">
-        {{ state.allDestinations[trip.destinationID].destination }}
+        <strong>Trip Destination:</strong>
+        {{ state.allDestinations[trip.destinationID - 1].destination }}
+      </div>
+      <div class="trip-duration">
+        <strong>Trip Duration: </strong>{{ trip.duration }} days
+      </div>
+      <div class="trip-status">
+        <strong>Trip Status:</strong>
+        {{ trip.status }}
       </div>
     </div>
     <router-view></router-view>
@@ -103,9 +120,18 @@ export default {
 img {
   height: 75%;
   width: 50%;
+  border-radius: 25px;
+  border: 1px solid black;
 }
 .trips {
   display: flex;
   flex-direction: column;
+  margin: 1%;
+}
+.trip-date {
+  margin-top: 1%;
+}
+.trip-status {
+  margin-bottom: 1%;
 }
 </style>
