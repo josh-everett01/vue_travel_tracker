@@ -94,12 +94,17 @@ Password: travel2020
 - Open your browser to http://localhost:8080/
 - You should now be able to see and interact with the project
 ```
+```
+$ npm deploy will build and deploy project to gh-pages.
+- If you have travisCI enabled the project will be automatically deployed to gh-pages upon successful pull request > merge to master
+```
 
 ## Tech Stack
 
 - Vue.js / JavaScript
 - Sass / CSS3
 - HTML5
+- TravisCI to lint PR's and then to deploy to gh-pages upon PR approval / merge of PR
 - GitHub Pages
 - Hound Code Reviewer for Pull Requests 
 - Vue.js Webpack Template (For a detailed explanation on how the template works, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).)
