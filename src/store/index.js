@@ -349,9 +349,19 @@ export default new Vuex.Store({
           dataToJson,
         )
         // eslint-disable-next-line no-console
-        .then((response) => {
+        // eslint-disable-next-line no-shadow
+        .then(({ data }) => {
           // eslint-disable-next-line no-console
-          console.log(response);
+          state.pendingTrips.forEach(((trip, index) => {
+            if (trip.id === data.updatedResource.id) {
+              state.pendingTrips.splice(index);
+            }
+          }));
+          state.travelersTrips.forEach(((trip, index) => {
+            if (trip.id === data.updatedResource.id) {
+              state.travelersTrips.splice(index);
+            }
+          }));
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
