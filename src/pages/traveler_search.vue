@@ -25,7 +25,7 @@
           <div class="destinationimage">
             <b-img
               fluid
-              v-bind:src="state.allDestinations[trip.destinationID].image"
+              v-bind:src="state.allDestinations[trip.destinationID - 1].image"
             />
           </div>
           <div class="trip-status">
@@ -35,7 +35,7 @@
             {{ trip.date }}
           </div>
           <div class="trip-destination">
-            {{ state.allDestinations[trip.destinationID].destination }}
+            {{ state.allDestinations[trip.destinationID - 1].destination }}
           </div>
           <b-button @click="approveTrip(trip.id)">Approve</b-button>
           <b-button @click="deleteTrip(trip.id)">Delete</b-button>
@@ -51,7 +51,7 @@
           <div class="destinationimage">
             <b-img
               fluid
-              v-bind:src="state.allDestinations[trip.destinationID].image"
+              v-bind:src="state.allDestinations[trip.destinationID - 1].image"
             />
           </div>
           <div class="trip-status">
@@ -61,7 +61,7 @@
             {{ trip.date }}
           </div>
           <div class="trip-destination">
-            {{ state.allDestinations[trip.destinationID].destination }}
+            {{ state.allDestinations[trip.destinationID - 1].destination }}
           </div>
         </div>
       </div>
