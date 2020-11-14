@@ -11,6 +11,9 @@
       >
         <template v-if="index < 15">
           <b-img :src="destination.image" alt="" width="425px" height="350px" />
+          <p>
+            <strong>{{ destination.destination }}</strong>
+          </p>
         </template>
       </div>
     </div>

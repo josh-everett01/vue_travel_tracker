@@ -179,10 +179,11 @@ export default new Vuex.Store({
       state.trips.forEach((trip) => {
         const result = isBefore(new Date(trip.date), new Date());
         if (result) {
-          state.travelersPreviousTrips.push(trip);
+          return state.travelersPreviousTrips.push(trip);
         } else if (result === false) {
-          state.travelersUpcomingTrips.push(trip);
+          return state.travelersUpcomingTrips.push(trip);
         }
+        return false;
       });
     },
     calcAmntTravSpent(state) {
@@ -279,10 +280,10 @@ export default new Vuex.Store({
           'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
           dataToJson,
         )
-        // eslint-disable-next-line no-console
-        .then((response) => {
+        // eslint-disable-next-line no-shadow
+        .then(({ data }) => {
           // eslint-disable-next-line no-console
-          console.log(response);
+          state.travelersUpcomingTrips.push(data.newResource);
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
