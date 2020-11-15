@@ -6,6 +6,7 @@ import App from '../App';
 import AgentDashboard from '../pages/agent_dashboard';
 import TravelerDashboard from '../pages/traveler_dashboard';
 import TravelerSearch from '../pages/traveler_search';
+import TripRequestForm from '../pages/trip_request_page';
 
 Vue.use(Router);
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/traveler-search/',
       name: 'TravelerSearch',
       component: TravelerSearch,
+    },
+    {
+      path: '/trip-request-form/',
+      name: 'TripRequestForm',
+      component: TripRequestForm,
     },
 
   ],

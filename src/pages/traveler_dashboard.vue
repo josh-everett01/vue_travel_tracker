@@ -1,13 +1,19 @@
 <template>
   <div v-if="state.travelerLoggedIn">
-    <h1>Hello, {{ state.traveler.name }}</h1>
-    <h3>You are a {{ state.traveler.travelerType }}</h3>
-    <h3>
-      You have spent {{ addTotalTripCosts | currency }} on traveling this year!
-    </h3>
-    <trip-request-form></trip-request-form>
-    <div v-if="this.$store.state.travelersUpcomingTrips.length">
-      <h1>Your Upcoming Trips:</h1>
+    <b-container class="traveler-info">
+      <h3>Hello, {{ state.traveler.name }}</h3>
+      <h4>You are a {{ state.traveler.travelerType }}</h4>
+      <h5>
+        You have spent {{ addTotalTripCosts | currency }} on traveling this
+        year!
+      </h5>
+    </b-container>
+
+    <h1 class="upcoming-trips-h1">Your Upcoming Trips:</h1>
+    <div
+      v-if="this.$store.state.travelersUpcomingTrips.length"
+      class="upcoming-trips"
+    >
       <div
         v-for="(trip, i) in state.travelersUpcomingTrips"
         class="trips"
@@ -36,28 +42,32 @@
       </div>
     </div>
     <h1>Your Previous Trips:</h1>
-    <div
-      v-for="(trip, index) in state.travelersPreviousTrips"
-      class="trips"
-      :key="index"
-    >
-      <div class="destinationimage">
-        <img v-bind:src="state.allDestinations[trip.destinationID - 1].image" />
-      </div>
-      <div class="trip-date">
-        <strong>Trip Date:</strong>
-        {{ trip.date }}
-      </div>
-      <div class="trip-destination">
-        <strong>Trip Destination:</strong>
-        {{ state.allDestinations[trip.destinationID - 1].destination }}
-      </div>
-      <div class="trip-duration">
-        <strong>Trip Duration: </strong>{{ trip.duration }} days
-      </div>
-      <div class="trip-status">
-        <strong>Trip Status:</strong>
-        {{ trip.status }}
+    <div class="previous-trips">
+      <div
+        v-for="(trip, index) in state.travelersPreviousTrips"
+        class="trips"
+        :key="index"
+      >
+        <div class="destinationimage">
+          <img
+            v-bind:src="state.allDestinations[trip.destinationID - 1].image"
+          />
+        </div>
+        <div class="trip-date">
+          <strong>Trip Date:</strong>
+          {{ trip.date }}
+        </div>
+        <div class="trip-destination">
+          <strong>Trip Destination:</strong>
+          {{ state.allDestinations[trip.destinationID - 1].destination }}
+        </div>
+        <div class="trip-duration">
+          <strong>Trip Duration: </strong>{{ trip.duration }} days
+        </div>
+        <div class="trip-status">
+          <strong>Trip Status:</strong>
+          {{ trip.status }}
+        </div>
       </div>
     </div>
     <router-view></router-view>
@@ -68,15 +78,16 @@
 import Vue2Filters from 'vue2-filters';
 import { mapGetters } from 'vuex';
 import Vue from 'vue';
-import TripRequestForm from '../components/TripRequestForm';
 
 Vue.use(Vue2Filters);
 export default {
   mounted() {
-    this.$store.dispatch('getTravelersTrips');
-    this.$store.dispatch('getTravsTripsAndDestinations');
-    this.$store.dispatch('getUpcomingAndPastTrips');
-    this.$store.dispatch('calcAmntTravSpent');
+    if (!this.hasTripRequestBeenSubmitted) {
+      this.$store.dispatch('getTravelersTrips');
+      this.$store.dispatch('getTravsTripsAndDestinations');
+      this.$store.dispatch('getUpcomingAndPastTrips');
+      this.$store.dispatch('calcAmntTravSpent');
+    }
   },
   data() {
     return {
@@ -112,14 +123,13 @@ export default {
     },
   },
   components: {
-    TripRequestForm,
   },
 };
 </script>
 <style scoped>
 img {
-  height: 75%;
-  width: 50%;
+  width: 300px;
+  height: 260px;
   border-radius: 25px;
   border: 1px solid black;
 }
@@ -133,5 +143,74 @@ img {
 }
 .trip-status {
   margin-bottom: 1%;
+}
+@media (min-width: 576px) {
+  img {
+    width: 310px;
+    height: 270px;
+  }
+  .upcoming-trips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .upcoming-trips-h1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row: 1;
+  }
+  .previous-trips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .upcoming-trips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .upcoming-trips-h1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row: 1;
+  }
+  .previous-trips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  img {
+    width: 350px;
+    height: 320px;
+  }
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  img {
+    width: 370px;
+    height: 340px;
+  }
+  .upcoming-trips {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .upcoming-trips-h1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row: 1;
+  }
+  .previous-trips {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  img {
+    width: 400px;
+    height: 370px;
+  }
 }
 </style>

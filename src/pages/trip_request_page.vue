@@ -5,6 +5,9 @@
       id="request-form"
       v-if="this.isTripRequestFormValid === false"
     >
+      <b-button @click="backToTravelerDashboard()" class="back-button">
+        BACK TO TRAVELER DASHBOARD
+      </b-button>
       <h3>Request Trips:</h3>
       <label for="destination-choice">Search for a Destination:</label>
       <b-form-input
@@ -38,12 +41,12 @@
         v-model="tripRequestForm.endDate"
         class="mb-2"
       ></b-form-datepicker>
-      <button
-        v-on:click="validateFormAndCalculateTripRequest"
-        id="trip-request-button"
+      <b-button
+        v-on:click="validateFormAndCalculateTripRequest()"
+        class="trip-request-button"
       >
         CALCULATE
-      </button>
+      </b-button>
     </section>
     <template v-if="this.hasTripRequestBeenSubmitted === false">
       <section
@@ -139,6 +142,7 @@ export default {
     },
     submitTripRequest() {
       this.$store.dispatch('submitTripRequest');
+      this.$router.push('/traveler-dashboard');
     },
     startDate() {
       return parseISO(
@@ -148,6 +152,10 @@ export default {
     },
     endDate() {
       return parseISO(this.$store.state.tripRequestInfo.endDate).toDateString();
+    },
+    backToTravelerDashboard() {
+      this.$store.state.tripRequestSubmitted = true;
+      this.$router.go(-1);
     },
   },
   computed: {
@@ -159,6 +167,9 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 3%;
+}
 button {
   align-self: center;
   border-radius: 25px;
@@ -173,6 +184,11 @@ img {
 }
 input {
   width: 55%;
+}
+.back-button {
+  display: flex;
+  width: 75%;
+  justify-content: center;
 }
 .confirm-h1 {
   border: 1px solid #000;
@@ -201,5 +217,8 @@ input {
 }
 .trip-info {
   padding-top: 15px;
+}
+.trip-request-button {
+  width: 35%;
 }
 </style>
