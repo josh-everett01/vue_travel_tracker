@@ -1,23 +1,18 @@
 <template>
   <div>
-    <div class="agent-header">
-      <h1>Welcome, Agent!</h1>
-      <h3>Earnings: {{ (state.totalMoneyForTrips * 0.1) | currency }}</h3>
-      <button @click="pushToTravelerPage()">
-        Agent Tools / Traveler Search
-      </button>
-    </div>
+    <b-container class="agent-header">
+      <h3><strong>Welcome, Agent!</strong></h3>
+      <h4>
+        <strong>Earnings: </strong>
+        {{ (state.totalMoneyForTrips * 0.1) | currency }}
+      </h4>
+    </b-container>
     <div v-if="!state.todaysTrips.length">
-      <h1>Todays Trips</h1>
-      <h1>There are no travelers on trips today</h1>
+      <h3><strong>Todays Trips:</strong></h3>
+      <h5>There are no trips today</h5>
     </div>
     <b-container v-if="state.todaysTrips.length">
       <h3>Today's Trips:</h3>
-      <span
-        ><i
-          >If there are travelers on trips today the trips will be shown here</i
-        ></span
-      >
       <b-row class="pending-trips">
         <b-col v-for="trip in state.todaysTrips" :key="trip.id">
           <div class="trip-img">
@@ -47,7 +42,7 @@
         </b-col>
       </b-row>
     </b-container>
-    <h1>Pending Trips:</h1>
+    <h3><strong>Pending Trips:</strong></h3>
     <div>
       <b-card-group deck>
         <b-card
@@ -56,11 +51,10 @@
           :key="trip.id"
           :title="'Pending Trip ' + (index + 1)"
           :img-src="state.allDestinations[trip.destinationID - 1].image"
-          class="trip"
         >
           <b-card-text>
             <strong> Traveler: </strong> <br />
-            {{ state.travelers[trip.userID - 1].name }}
+            {{ state.travelers[trip.userID - 1].name }} <br />
             <strong> Destination: </strong> <br />
             {{ state.allDestinations[trip.destinationID - 1].destination }}
             <br />
@@ -88,9 +82,6 @@ export default {
     this.$store.dispatch('getAgentEarnings');
   },
   methods: {
-    pushToTravelerPage() {
-      this.$router.push('/traveler-search');
-    },
     approveTrip(tripId) {
       this.$store.dispatch('approveTrip', tripId);
     },
@@ -110,20 +101,23 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-top: 3%;
+}
 button {
   margin: 5%;
 }
-img {
+/* img {
   size: 300px;
-}
+} */
 .agent-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
 }
-.card-deck .card {
-  max-width: calc(25% - 30px);
-  min-width: 20%;
+.card-title {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 .card-text {
   color: #fff;
@@ -134,5 +128,43 @@ img {
 }
 .list-group-item {
   color: #000;
+}
+@media (min-width: 576px) {
+  .card {
+    width: 270px;
+    margin: 1%;
+    flex: auto;
+  }
+  img {
+    height: 230px;
+  }
+}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .card-deck {
+    justify-content: center;
+  }
+  .card {
+    width: 350px;
+    margin: 1%;
+    flex: inherit;
+  }
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .card-deck {
+    justify-content: center;
+  }
+  .card {
+    width: 350px;
+    margin: 2%;
+    flex: inherit;
+  }
+}
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
 }
 </style>

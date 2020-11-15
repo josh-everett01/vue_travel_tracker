@@ -30,11 +30,14 @@ export default new Vuex.Store({
     picUrl: '',
     todaysTrips: [],
     totalMoneyForTrips: Number,
+    travHasPendingTrips: false,
     traveler: {},
     travelerId: Number,
     travelerLoggedIn: false,
     travelers: [],
+    travelersApprovedTrips: [],
     travelersDestinations: [],
+    travelersPendingTrips: [],
     travelersPreviousTrips: [],
     travelerSearchActive: false,
     travelersTrips: [],
@@ -382,6 +385,20 @@ export default new Vuex.Store({
         },
       );
     },
+    travHasPendingTrips(state) {
+      state.pendingTrips.forEach(((trip) => {
+        if (trip.userID === state.travelerId) { state.travHasPendingTrips = true; }
+      }));
+    },
+    getTravsPendingAndApprovedTrips(state) {
+      state.travelersTrips.forEach(((trip) => {
+        if (trip.status === 'pending') {
+          state.travelersPendingTrips.push(trip);
+        } else if (trip.status === 'approved') {
+          state.travelersApprovedTrips.push(trip);
+        }
+      }));
+    },
   },
 
   actions: {
@@ -490,6 +507,12 @@ export default new Vuex.Store({
     },
     deleteTrip(context, tripId) {
       context.commit('deleteTrip', tripId);
+    },
+    travHasPendingTrips(context) {
+      context.commit('travHasPendingTrips');
+    },
+    getTravsPendingAndApprovedTrips(context) {
+      context.commit('getTravsPendingAndApprovedTrips');
     },
   },
 });
