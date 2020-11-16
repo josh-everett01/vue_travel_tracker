@@ -82,6 +82,9 @@ import Vue from 'vue';
 Vue.use(Vue2Filters);
 export default {
   mounted() {
+    if (this.$store.state.travelerLoggedIn === false) {
+      this.$router.push('/');
+    }
     if (!this.hasTripRequestBeenSubmitted) {
       this.$store.dispatch('getTravelersTrips');
       this.$store.dispatch('getTravsTripsAndDestinations');

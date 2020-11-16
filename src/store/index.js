@@ -24,20 +24,18 @@ export default new Vuex.Store({
     eachTripsCost: [],
     errors: [],
     formData: {},
+    formHasUnAndPw: false,
     formIsValid: false,
     passwordIsValid: false,
     pendingTrips: [],
     picUrl: '',
     todaysTrips: [],
     totalMoneyForTrips: Number,
-    travHasPendingTrips: false,
     traveler: {},
     travelerId: Number,
     travelerLoggedIn: false,
     travelers: [],
-    travelersApprovedTrips: [],
     travelersDestinations: [],
-    travelersPendingTrips: [],
     travelersPreviousTrips: [],
     travelerSearchActive: false,
     travelersTrips: [],
@@ -77,10 +75,10 @@ export default new Vuex.Store({
     checkForErrors(state, form) {
       state.errors = [];
       if (!form.username) {
-        state.errors.push('Username is required.');
+        state.errors.push('Username is required');
       }
       if (!form.password) {
-        state.errors.push('Password is required.');
+        state.errors.push('Password is required');
       }
       if (form.username && form.password) {
         state.formIsValid = true;
@@ -94,25 +92,32 @@ export default new Vuex.Store({
       }
     },
     validateUsername(state, form) {
-      if (
-        form.username === state.agentLogin ||
-        form.username.includes('traveler')
-      ) {
+      if (form.username.toLowerCase() === state.agentLogin) {
+        debugger;
         state.usernameIsValid = true;
-      } else {
-        state.errors.push('Please enter a valid Username');
+      }
+      if (form.username.toLowerCase().includes('traveler')) {
+        state.travelers.forEach(((traveler) => {
+          if (parseInt(form.username.slice(8), 10) === traveler.id) {
+            state.usernameIsValid = true;
+          }
+        }));
+      }
+      if (state.usernameIsValid === false) {
+        state.errors.push('Please enter a valid username');
       }
     },
     determineUser(state, form) {
       if (state.formIsValid && state.passwordIsValid && state.usernameIsValid) {
-        if (form.username === state.agentLogin) {
-          state.user = form.username;
+        if (form.username.toLowerCase() === state.agentLogin) {
+          state.user = form.username.toLowerCase();
         }
-        if (
-          form.username.toLowerCase().includes('traveler') &&
-          form.username.slice(8) < state.travelers.length
-        ) {
-          state.user = form.username;
+        if (form.username.toLowerCase().includes('traveler')) {
+          state.travelers.forEach(((traveler) => {
+            if (parseInt(form.username.slice(8), 10) === traveler.id) {
+              state.user = form.username.toLowerCase();
+            }
+          }));
         }
       }
     },
@@ -385,20 +390,6 @@ export default new Vuex.Store({
         },
       );
     },
-    travHasPendingTrips(state) {
-      state.pendingTrips.forEach(((trip) => {
-        if (trip.userID === state.travelerId) { state.travHasPendingTrips = true; }
-      }));
-    },
-    getTravsPendingAndApprovedTrips(state) {
-      state.travelersTrips.forEach(((trip) => {
-        if (trip.status === 'pending') {
-          state.travelersPendingTrips.push(trip);
-        } else if (trip.status === 'approved') {
-          state.travelersApprovedTrips.push(trip);
-        }
-      }));
-    },
   },
 
   actions: {
@@ -507,12 +498,6 @@ export default new Vuex.Store({
     },
     deleteTrip(context, tripId) {
       context.commit('deleteTrip', tripId);
-    },
-    travHasPendingTrips(context) {
-      context.commit('travHasPendingTrips');
-    },
-    getTravsPendingAndApprovedTrips(context) {
-      context.commit('getTravsPendingAndApprovedTrips');
     },
   },
 });

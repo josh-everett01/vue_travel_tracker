@@ -33,7 +33,6 @@
             <strong> Trip Status: </strong><br />
             {{ trip.status }}
           </b-card-text>
-          <template #footer> </template>
         </b-card>
       </b-card-group>
     </b-container>
@@ -74,6 +73,9 @@
 export default {
   name: 'AgentDashboard',
   mounted() {
+    if (this.$store.state.agentLoggedIn === false) {
+      this.$router.push('/');
+    }
     if (!this.$store.state.pendingTrips.length) {
       this.$store.dispatch('getPendingTrips', this.allTrips);
     }
@@ -105,7 +107,7 @@ export default {
   border-top: 1px solid #000;
 }
 .todays-trip img {
-  height: 110%;
+  height: 100%;
   border-bottom: 1px solid #000;
 }
 .approve-button {
@@ -120,9 +122,9 @@ export default {
 button {
   margin: 5%;
 }
-/* img {
+img {
   size: 300px;
-} */
+}
 .agent-header {
   display: flex;
   flex-direction: column;
@@ -151,6 +153,9 @@ button {
 }
 .todays-trip-img {
   border: 1px solid #000;
+}
+.todays-trip footer {
+  visibility: hidden;
 }
 @media (min-width: 576px) {
   .card {

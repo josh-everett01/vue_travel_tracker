@@ -35,7 +35,7 @@
       <div class="errors-div">
         <ul>
           <li v-for="error in this.$store.state.errors" v-bind:key="error">
-            - {{ error }}
+            {{ error }}
           </li>
         </ul>
       </div>
@@ -63,13 +63,19 @@ export default {
   methods: {
     validateFormAndUser() {
       this.$store.dispatch('checkForErrors', this.loginForm);
-      this.$store.dispatch('validatePassword', this.loginForm);
-      this.$store.dispatch('validateUsername', this.loginForm);
-      this.$store.dispatch('determineUser', this.loginForm);
-      if (this.whichUser === 'agency') {
-        this.$store.dispatch('agentLogin');
-      } else {
-        this.$store.dispatch('travelerLogin', this.loginForm);
+      if (this.$store.state.formIsValid === true) {
+        this.$store.dispatch('validatePassword', this.loginForm);
+        if (this.$store.state.passwordIsValid === true) {
+          this.$store.dispatch('validateUsername', this.loginForm);
+          if (this.$store.state.usernameIsValid) {
+            this.$store.dispatch('determineUser', this.loginForm);
+            if (this.whichUser === 'agency') {
+              this.$store.dispatch('agentLogin');
+            } else {
+              this.$store.dispatch('travelerLogin', this.loginForm);
+            }
+          }
+        }
       }
     },
     pushToTripRequestPage() {
@@ -101,6 +107,9 @@ export default {
   justify-content: space-around;
   margin-bottom: 1%;
 }
+li::marker {
+  color: #fff;
+}
 .h1-div {
   display: flex;
   grid-row: 1;
@@ -108,15 +117,6 @@ export default {
   align-self: center;
   justify-content: center;
 }
-/* input {
-  grid-column: 3;
-} */
-.errors-div {
-  grid-column: 2;
-}
-/* .input-button-div {
-  display: grid;
-} */
 .input-div {
   display: flex;
   grid-row: 2;
@@ -246,16 +246,9 @@ input {
   .logout-button {
     margin-right: 3%;
   }
-  /* .login-wrapper-div {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
-  }
-  .h1-div {
-    grid-column: 2;
-  }
-  .input-div {
+  .errors-div {
+    text-align: center;
     grid-column: 3;
-  } */
+  }
 }
 </style>
