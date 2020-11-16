@@ -16,8 +16,11 @@ export default {
   name: 'App',
   metaInfo: {
     meta: [
-      { charset: 'utf-8' },
-      { name: 'og:image', content: 'https://i.imgur.com/Mrt8abr.jpg' },
+      { property: 'og:title', content: 'Vue Travel Tracker' },
+      { property: 'og:site_name', content: 'Vue Travel Tracker' },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:image', content: 'https://i.imgur.com/Mrt8abr.jpg' },
+      { property: 'og:description', content: 'Web application built with vue.js which manages and tracks different trips for users and travel agents, by consuming and posting to an external API.' },
     ],
   },
   mounted() {
