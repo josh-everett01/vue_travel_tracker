@@ -14,6 +14,12 @@ import MainPageStyling from './components/MainPageStyling';
 
 export default {
   name: 'App',
+  metaInfo: {
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'og:image', content: 'https://i.imgur.com/Mrt8abr.jpg' },
+    ],
+  },
   mounted() {
     this.$store.dispatch('getAllDestinations');
   },
