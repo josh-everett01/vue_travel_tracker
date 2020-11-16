@@ -45,7 +45,7 @@ export default {
 
 <style scoped>
 h1 {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   border: 1px solid #fff;
   border-radius: 25px;
 }
@@ -76,6 +76,7 @@ p {
   background-size: cover;
   background-position: bottom;
   margin-bottom: 20px;
+  border: 1px solid #000;
 }
 /* * {
   border: 1px solid red;

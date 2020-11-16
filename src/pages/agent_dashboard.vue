@@ -13,34 +13,29 @@
     </div>
     <b-container v-if="state.todaysTrips.length">
       <h3>Today's Trips:</h3>
-      <b-row class="pending-trips">
-        <b-col v-for="trip in state.todaysTrips" :key="trip.id">
-          <div class="trip-img">
-            <b-img
-              thumbnail
-              v-bind:src="state.allDestinations[trip.destinationID].image"
-            />
-          </div>
-          <span><strong> Traveler: </strong></span>
-          <div class="trav-name">
-            {{ state.travelers[trip.userID].name }}
-          </div>
-          <div class="trip-destination">
-            <strong> Destination: </strong>
-            {{ state.allDestinations[trip.destinationID].destination }}
-          </div>
-          <div class="trip-date">
-            <strong> Trip Date: </strong> {{ trip.date }}
-          </div>
-          <div class="trip-duration">
-            <strong> Trip Duration: </strong> {{ trip.duration }} days
-          </div>
-          <div class="trip-status">
+      <b-card-group deck>
+        <b-card
+          overlay
+          v-for="(trip, index) in state.todaysTrips"
+          :key="trip.id"
+          class="todays-trip"
+          :title="'Todays Trip ' + (index + 1)"
+          :img-src="state.allDestinations[trip.destinationID - 1].image"
+        >
+          <b-card-text>
+            <strong> Traveler: </strong> <br />
+            {{ state.travelers[trip.userID - 1].name }} <br />
+            <strong> Destination: </strong> <br />
+            {{ state.allDestinations[trip.destinationID - 1].destination }}
+            <br />
+            <strong> Trip Date: </strong> <br />
+            {{ trip.date }} <br />
             <strong> Trip Status: </strong><br />
             {{ trip.status }}
-          </div>
-        </b-col>
-      </b-row>
+          </b-card-text>
+          <template #footer> </template>
+        </b-card>
+      </b-card-group>
     </b-container>
     <h3><strong>Pending Trips:</strong></h3>
     <div>
@@ -62,8 +57,12 @@
             {{ trip.date }}
           </b-card-text>
           <template #footer>
-            <b-button @click="approveTrip(trip.id)">Approve</b-button>
-            <b-button @click="deleteTrip(trip.id)">Delete</b-button>
+            <b-button class="approve-button" @click="approveTrip(trip.id)"
+              >Approve</b-button
+            >
+            <b-button class="delete-button" @click="deleteTrip(trip.id)"
+              >Delete</b-button
+            >
           </template>
         </b-card>
       </b-card-group>
@@ -101,6 +100,20 @@ export default {
 </script>
 
 <style scoped>
+.card-footer {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-top: 1px solid #000;
+}
+.todays-trip img {
+  height: 110%;
+  border-bottom: 1px solid #000;
+}
+.approve-button {
+  border: 1px solid #000;
+}
+.delete-button {
+  border: 1px solid #000;
+}
 .container {
   margin-top: 3%;
 }
@@ -116,18 +129,28 @@ button {
   align-items: center;
   justify-content: space-evenly;
 }
+.card {
+  border: 1px solid #000;
+}
 .card-title {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.65);
+  border: 1px solid #000;
+  border-radius: 10px;
 }
 .card-text {
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.65);
+  border: 1px solid #000;
+  border-radius: 10px;
 }
 .card-title {
   color: #fff;
 }
 .list-group-item {
   color: #000;
+}
+.todays-trip-img {
+  border: 1px solid #000;
 }
 @media (min-width: 576px) {
   .card {

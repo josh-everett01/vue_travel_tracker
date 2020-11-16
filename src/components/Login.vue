@@ -16,7 +16,7 @@
           <label for="password">Password:</label>
           <input type="text" v-model="loginForm.password" />
         </div>
-        <button v-on:click="validateFormAndUser">LOGIN</button>
+        <b-button v-on:click="validateFormAndUser">LOGIN</b-button>
       </div>
     </template>
     <div v-else-if="this.$store.state.travelerLoggedIn" class="traveler-logout">
@@ -128,6 +128,7 @@ button {
   align-self: flex-end;
   width: 30%;
   padding: 1%;
+  border: 1px solid #000;
 }
 label {
   grid-row: 1;
@@ -225,6 +226,9 @@ input {
   .input-div {
     grid-column: 3;
     grid-row: 1;
+  }
+  .traveler-logout {
+    grid-column: 3;
   }
 }
 

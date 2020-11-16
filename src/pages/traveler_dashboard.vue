@@ -190,6 +190,7 @@ img {
   img {
     width: 370px;
     height: 340px;
+    margin: 3%;
   }
   .upcoming-trips {
     display: grid;
