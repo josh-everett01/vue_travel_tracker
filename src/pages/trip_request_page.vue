@@ -53,7 +53,7 @@
         v-if="this.tripRequestInfoCreated"
         class="container confirm-trip"
       >
-        <h1 class="confirm-h1">Please confirm your trip details:</h1>
+        <h3 class="confirm-h1">Please confirm your trip details:</h3>
         <div class="destinationimage">
           <img v-bind:src="state.tripRequestInfo.destinationImageUrl" />
         </div>
@@ -193,6 +193,7 @@ input {
 .confirm-h1 {
   border: 1px solid #000;
   border-radius: 25px;
+  padding: 1%;
 }
 .confirm-trip {
   align-content: center;
