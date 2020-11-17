@@ -3,7 +3,10 @@
     <section
       class="container"
       id="request-form"
-      v-if="this.isTripRequestFormValid === false"
+      v-if="
+        (this.isTripRequestFormValid === false) |
+          (this.tripRequestInfoCreated === false)
+      "
     >
       <b-button @click="backToTravelerDashboard()" class="back-button">
         BACK TO TRAVELER DASHBOARD
@@ -48,12 +51,12 @@
         CALCULATE
       </b-button>
     </section>
-    <template v-if="this.hasTripRequestBeenSubmitted === false">
+    <template v-if="this.tripRequestInfoCreated">
       <section
         v-if="this.tripRequestInfoCreated"
         class="container confirm-trip"
       >
-        <h3 class="confirm-h1">Please confirm your trip details:</h3>
+        <h1 class="confirm-h1">Please confirm your trip details:</h1>
         <div class="destinationimage">
           <img v-bind:src="state.tripRequestInfo.destinationImageUrl" />
         </div>
@@ -118,6 +121,12 @@ import parseISO from 'date-fns/parseISO';
 import { mapGetters } from 'vuex';
 
 export default {
+  mounted() {
+    if (this.$store.state.travelerLoggedIn === false) {
+      this.$router.push('/');
+    }
+    this.makeFormBlank();
+  },
   data() {
     return {
       state: this.$store.state,
@@ -139,6 +148,12 @@ export default {
       if (this.isTripRequestFormValid === true) {
         this.$store.dispatch('calculateTripRequest', this.tripRequestForm);
       }
+    },
+    makeFormBlank() {
+      this.tripRequestForm.destination = '';
+      this.tripRequestForm.numberOfTravs = '';
+      this.tripRequestForm.startDate = '';
+      this.tripRequestForm.endDate = '';
     },
     submitTripRequest() {
       this.$store.dispatch('submitTripRequest');
@@ -193,7 +208,6 @@ input {
 .confirm-h1 {
   border: 1px solid #000;
   border-radius: 25px;
-  padding: 1%;
 }
 .confirm-trip {
   align-content: center;

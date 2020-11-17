@@ -93,7 +93,6 @@ export default new Vuex.Store({
     },
     validateUsername(state, form) {
       if (form.username.toLowerCase() === state.agentLogin) {
-        debugger;
         state.usernameIsValid = true;
       }
       if (form.username.toLowerCase().includes('traveler')) {
@@ -216,6 +215,9 @@ export default new Vuex.Store({
       });
     },
     validateTripRequestForm(state, tripRequestForm) {
+      state.hasTripRequestBeenSubmitted = false;
+      state.isTripRequestFormValid = false;
+      state.tripRequestInfoCreated = false;
       state.errors = [];
       if (state.tripRequestFormValid === false) {
         if (!tripRequestForm.destination) {
@@ -238,6 +240,7 @@ export default new Vuex.Store({
       }
     },
     calculateTripRequest(state, tripRequestForm) {
+      state.tripRequestInfoCreated = false;
       state.allDestinations.forEach((destination) => {
         if (tripRequestForm.destination === destination.destination) {
           state.tripRequestInfo.destination = tripRequestForm.destination;
@@ -272,6 +275,7 @@ export default new Vuex.Store({
       });
     },
     submitTrip(state) {
+      debugger;
       const data = JSON.stringify({
         id: parseFloat(state.allTrips.length + 1),
         userID: state.traveler.id,
@@ -283,6 +287,7 @@ export default new Vuex.Store({
         suggestedActivities: [''],
       });
       const dataToJson = JSON.parse(data);
+      debugger;
       axios
         .post(
           'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
@@ -290,21 +295,25 @@ export default new Vuex.Store({
         )
         // eslint-disable-next-line no-shadow
         .then(({ data }) => {
+          debugger;
           // eslint-disable-next-line no-console
           state.travelersUpcomingTrips.push(data.newResource);
+          state.tripRequestSubmitted = true;
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
           console.log(e);
         });
-      state.tripRequestSubmitted = true;
+      state.isTripRequestFormValid = false;
+      state.tripRequestInfoCreated = false;
+      state.hasTripRequestBeenSubmitted = false;
     },
     refreshTravelerDashboard(state) {
       state.tripRequestFormValid = false;
     },
-    getRefreshedTrips(state, response) {
-      state.allTrips = response.trips;
-    },
+    // getRefreshedTrips(state, response) {
+    //   state.allTrips = response.trips;
+    // },
     getPendingTrips(state, allTrips) {
       allTrips.forEach(((trip) => {
         if (trip.status === 'pending') {
@@ -378,6 +387,13 @@ export default new Vuex.Store({
       state.tripRequestApproved = true;
     },
     deleteTrip(state, tripId) {
+      state.pendingTrips.forEach(((trip, index) => {
+        // eslint-disable-next-line no-unused-expressions
+        state;
+        if (tripId === trip.id) {
+          state.pendingTrips.splice(index, 1);
+        }
+      }));
       const data = { id: tripId };
       fetch(
         'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
