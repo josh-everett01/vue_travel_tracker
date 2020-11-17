@@ -14,7 +14,11 @@
         </div>
         <div class="password-div">
           <label for="password">Password:</label>
-          <input type="text" v-model="loginForm.password" />
+          <input
+            type="password"
+            v-model="loginForm.password"
+            v-on:keyup.enter="validateFormAndUser"
+          />
         </div>
         <b-button v-on:click="validateFormAndUser">LOGIN</b-button>
       </div>
@@ -145,6 +149,7 @@ input {
 }
 .logout-button {
   grid-row: 1;
+  margin-right: 1%;
 }
 .traveler-logout {
   display: flex;
