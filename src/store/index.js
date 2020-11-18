@@ -275,7 +275,6 @@ export default new Vuex.Store({
       });
     },
     submitTrip(state) {
-      debugger;
       const data = JSON.stringify({
         id: parseFloat(state.allTrips.length + 1),
         userID: state.traveler.id,
@@ -287,7 +286,6 @@ export default new Vuex.Store({
         suggestedActivities: [''],
       });
       const dataToJson = JSON.parse(data);
-      debugger;
       axios
         .post(
           'https://fe-apps.herokuapp.com/api/v1/travel-tracker/data/trips/trips',
@@ -295,7 +293,6 @@ export default new Vuex.Store({
         )
         // eslint-disable-next-line no-shadow
         .then(({ data }) => {
-          debugger;
           // eslint-disable-next-line no-console
           state.travelersUpcomingTrips.push(data.newResource);
           state.tripRequestSubmitted = true;
