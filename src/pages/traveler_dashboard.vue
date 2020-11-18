@@ -76,7 +76,7 @@
 
 <script>
 import Vue2Filters from 'vue2-filters';
-// import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import Vue from 'vue';
 
 Vue.use(Vue2Filters);
@@ -86,7 +86,8 @@ export default {
       this.$router.push('/');
     }
 
-    if (this.$store.state.tripRequestFormValid === false) {
+    if (this.$store.state.tripRequestFormValid === false &&
+    this.hasTripRequestBeenSubmitted === false) {
       this.$store.dispatch('getTravelersTrips');
       this.$store.dispatch('getTravsTripsAndDestinations');
       this.$store.dispatch('getUpcomingAndPastTrips');
@@ -113,14 +114,7 @@ export default {
       const total = this.$store.state.eachTripsCost.reduce((a, b) => a + b, 0);
       return total;
     },
-    // ...mapGetters(['hasTripRequestBeenSubmitted']),
-    // hopefullyRefresh() {
-    //   if (this.hasTripRequestBeenSubmitted) {
-    //     debugger;
-    //     this.forceRerender();
-    //   }
-    //   return false;
-    // },
+    ...mapGetters(['hasTripRequestBeenSubmitted']),
   },
   methods: {
     forceRerender() {
